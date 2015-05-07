@@ -41,7 +41,7 @@
 		<EUtilsUseHistory>no</EUtilsUseHistory>
 		<ResetDatabaseTables>yes</ResetDatabaseTables>
 		<EUtilsAddress>http://eutils.ncbi.nlm.nih.gov/entrez/eutils</EUtilsAddress>
-		<EMailAddress>leomandres@gmail.com</EMailAddress>
+		<EMailAddress>emailaddress@example.com</EMailAddress>
 		<HTTPDelay>1</HTTPDelay>
 		<WeekdayHours>
 			<StartTime>9:00</StartTime>
