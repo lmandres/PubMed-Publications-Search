@@ -13,23 +13,23 @@
 	</DatabaseConnection>
 	<DatabaseConnection type="MySQLDriver">
 		<Host>localhost</Host>
-		<User>pmsearch_user</User>
-		<Passwd>pmsearch_password</Passwd>
+		<User>username</User>
+		<Passwd>password</Passwd>
 	 	<DB>pubmed_db</DB>
 	</DatabaseConnection>
 	<DatabaseConnection type="SQLite3Driver">
 		<FileName>pubmed_db.sqlite</FileName>
 	</DatabaseConnection>
 	<DatabaseConnection type="MySQLDriver">
-		<Host>192.168.56.1</Host>
-		<User>pmsearch_user</User>
-		<Passwd>PmSearch_PassWord</Passwd>
+		<Host>localhost</Host>
+		<User>username</User>
+		<Passwd>password</Passwd>
 	 	<DB>pubmed_db</DB>
 	</DatabaseConnection>
 	<DatabaseConnection type="PyODBCDriver">
 		<Driver>SQL Server</Driver>
-	 	<Server>sphdb.sph.emory.edu</Server>
-	 	<Database>ACTSI</Database>
+	 	<Server>localhost</Server>
+	 	<Database>pubmed_db</Database>
 	 	<TrustedConnection>yes</TrustedConnection>
 	</DatabaseConnection>
 -->
