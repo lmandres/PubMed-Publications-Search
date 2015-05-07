@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BiblioAnalysisSettings>
+<!--
+	<DatabaseConnection type="JdbcOdbcDriver">
+		<Driver>Microsoft Access Driver (*.mdb, *.accdb)</Driver>
+<DBQ>pubmed_db_Grant_Numbers_Search.accdb</DBQ>
+	 	<DBQ>pubmed_db.accdb</DBQ>
+	</DatabaseConnection>
+	<DatabaseConnection type="PyODBCDriver">
+		<Driver>Microsoft Access Driver (*.mdb, *.accdb)</Driver>
+	 	<DBQ>pubmed_db.accdb</DBQ>
+	</DatabaseConnection>
+	<DatabaseConnection type="MySQLDriver">
+		<Host>localhost</Host>
+		<User>pmsearch_user</User>
+		<Passwd>pmsearch_password</Passwd>
+	 	<DB>pubmed_db</DB>
+	</DatabaseConnection>
+	<DatabaseConnection type="SQLite3Driver">
+		<FileName>pubmed_db.sqlite</FileName>
+	</DatabaseConnection>
+	<DatabaseConnection type="MySQLDriver">
+		<Host>192.168.56.1</Host>
+		<User>pmsearch_user</User>
+		<Passwd>PmSearch_PassWord</Passwd>
+	 	<DB>pubmed_db</DB>
+	</DatabaseConnection>
+	<DatabaseConnection type="PyODBCDriver">
+		<Driver>SQL Server</Driver>
+	 	<Server>sphdb.sph.emory.edu</Server>
+	 	<Database>ACTSI</Database>
+	 	<TrustedConnection>yes</TrustedConnection>
+	</DatabaseConnection>
+-->
+	<DatabaseConnection type="SQLite3Driver">
+		<FileName>pubmed_db.sqlite</FileName>
+	</DatabaseConnection>
+	<SearchPubMedSettings>
+		<SearchToolName>Bibliometric Analysis PubMed Search Tool v3.3</SearchToolName>
+		<EUtilsUseHistory>no</EUtilsUseHistory>
+		<ResetDatabaseTables>yes</ResetDatabaseTables>
+		<EUtilsAddress>http://eutils.ncbi.nlm.nih.gov/entrez/eutils</EUtilsAddress>
+		<EMailAddress>leomandres@gmail.com</EMailAddress>
+		<HTTPDelay>1</HTTPDelay>
+		<WeekdayHours>
+			<StartTime>9:00</StartTime>
+			<EndTime>17:00</EndTime>
+		</WeekdayHours>
+		<ReturnMaximum>100000</ReturnMaximum>
+<!-- 
+		<UpdateInvestigatorIDs>yes</UpdateInvestigatorIDs>
+		<MinimumDate>2002</MinimumDate>
+		<MaximumDate>2012</MaximumDate>
+-->
+		<MaximumURLLength>2000</MaximumURLLength>
+		<MaximumTries>600</MaximumTries>
+		<Timeout>60</Timeout>
+		<UpdatePublicationResults>no</UpdatePublicationResults>
+		<SearchStrategies>
+			<PersonByPerson>yes</PersonByPerson>
+			<PersonOrganization>no</PersonOrganization>
+			<PersonGrant>no</PersonGrant>
+			<PersonCoauthor>no</PersonCoauthor>
+			<CTSAGrant>no</CTSAGrant>
+			<PMCIDCiteByPMCID>no</PMCIDCiteByPMCID>
+			<PubMedIDCiteByPubMedID>no</PubMedIDCiteByPubMedID>
+			<PubMedIDNeighborPubMedID>no</PubMedIDNeighborPubMedID>
+		</SearchStrategies>
+	</SearchPubMedSettings>
+	<ClassifyMeSHTermsSettings>
+		<MeSHDescriptorsFileName>desc2013.xml</MeSHDescriptorsFileName>
+		<MeSHQualifiersFileName>qual2013.xml</MeSHQualifiersFileName>
+		<ResetDatabaseTables>yes</ResetDatabaseTables>
+	</ClassifyMeSHTermsSettings>
+</BiblioAnalysisSettings>
