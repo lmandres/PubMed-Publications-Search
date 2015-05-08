@@ -37,7 +37,7 @@
 		<FileName>pubmed_db.sqlite</FileName>
 	</DatabaseConnection>
 	<SearchPubMedSettings>
-		<SearchToolName>Bibliometric Analysis PubMed Search Tool v3.3</SearchToolName>
+		<SearchToolName>Bibliometric Analysis PubMed Search Tool v3.4</SearchToolName>
 		<EUtilsUseHistory>no</EUtilsUseHistory>
 		<ResetDatabaseTables>yes</ResetDatabaseTables>
 		<EUtilsAddress>http://eutils.ncbi.nlm.nih.gov/entrez/eutils</EUtilsAddress>
