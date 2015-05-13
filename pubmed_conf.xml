@@ -13,23 +13,23 @@
 	</DatabaseConnection>
 	<DatabaseConnection type="MySQLDriver">
 		<Host>localhost</Host>
-		<User>pmsearch_user</User>
-		<Passwd>pmsearch_password</Passwd>
+		<User>username</User>
+		<Passwd>password</Passwd>
 	 	<DB>pubmed_db</DB>
 	</DatabaseConnection>
 	<DatabaseConnection type="SQLite3Driver">
 		<FileName>pubmed_db.sqlite</FileName>
 	</DatabaseConnection>
 	<DatabaseConnection type="MySQLDriver">
-		<Host>192.168.56.1</Host>
-		<User>pmsearch_user</User>
-		<Passwd>PmSearch_PassWord</Passwd>
+		<Host>localhost</Host>
+		<User>username</User>
+		<Passwd>password</Passwd>
 	 	<DB>pubmed_db</DB>
 	</DatabaseConnection>
 	<DatabaseConnection type="PyODBCDriver">
 		<Driver>SQL Server</Driver>
-	 	<Server>sphdb.sph.emory.edu</Server>
-	 	<Database>ACTSI</Database>
+	 	<Server>localhost</Server>
+	 	<Database>pubmed_db</Database>
 	 	<TrustedConnection>yes</TrustedConnection>
 	</DatabaseConnection>
 -->
@@ -37,11 +37,11 @@
 		<FileName>pubmed_db.sqlite</FileName>
 	</DatabaseConnection>
 	<SearchPubMedSettings>
-		<SearchToolName>Bibliometric Analysis PubMed Search Tool v3.3</SearchToolName>
+		<SearchToolName>Bibliometric Analysis PubMed Search Tool v3.4</SearchToolName>
 		<EUtilsUseHistory>no</EUtilsUseHistory>
 		<ResetDatabaseTables>yes</ResetDatabaseTables>
 		<EUtilsAddress>http://eutils.ncbi.nlm.nih.gov/entrez/eutils</EUtilsAddress>
-		<EMailAddress>leomandres@gmail.com</EMailAddress>
+		<EMailAddress>emailaddress@example.com</EMailAddress>
 		<HTTPDelay>1</HTTPDelay>
 		<WeekdayHours>
 			<StartTime>9:00</StartTime>
@@ -58,12 +58,12 @@
 		<Timeout>60</Timeout>
 		<UpdatePublicationResults>no</UpdatePublicationResults>
 		<SearchStrategies>
-			<PersonByPerson>yes</PersonByPerson>
+			<PersonByPerson>no</PersonByPerson>
 			<PersonOrganization>no</PersonOrganization>
 			<PersonGrant>no</PersonGrant>
 			<PersonCoauthor>no</PersonCoauthor>
-			<CTSAGrant>no</CTSAGrant>
-			<PMCIDCiteByPMCID>no</PMCIDCiteByPMCID>
+			<CTSAGrant>yes</CTSAGrant>
+			<PMCIDCiteByPMCID>yes</PMCIDCiteByPMCID>
 			<PubMedIDCiteByPubMedID>no</PubMedIDCiteByPubMedID>
 			<PubMedIDNeighborPubMedID>no</PubMedIDNeighborPubMedID>
 		</SearchStrategies>
