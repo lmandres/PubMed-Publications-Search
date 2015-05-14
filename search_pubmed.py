@@ -220,7 +220,7 @@ if __name__ == '__main__':
         if sys.argv[1] == '--license':
             print('''
 PubMed Publications Search
-Script that creates automatic searches based on author names, grant numbers, or organizations.
+Script that creates automatic searches on PubMed.
 Copyright (C) 2015  Leo Andres
 
 This program is free software: you can redistribute it and/or modify
