@@ -241,5 +241,6 @@ if __name__ == '__main__':
     lmandres@yahoo.com
 ''')
 
-    pubmed_search = PubMedSearchApp()
-    pubmed_search.run_pubmed_search()
+    else:
+        pubmed_search = PubMedSearchApp()
+        pubmed_search.run_pubmed_search()
