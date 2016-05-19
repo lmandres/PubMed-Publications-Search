@@ -81,144 +81,18 @@ class PubMedAccessPyODBCDatabaseSearch(PubMedAccessPyODBCDatabaseController):
                                                                          FROM
                                                                              (
                                                                                  SELECT DISTINCT
-                                                                                     ari_1_1.PERSON_ID,
-                                                                                     ari_1_1.FAMILY_NAME,
-                                                                                     ari_1_1.FIRST_GIVEN_NAME,
-                                                                                     ari_1_1.SECOND_GIVEN_NAME
-                                                                                 FROM (
-                                                                                        SELECT DISTINCT RAPIDAPP_PERSON_ROSTER.PERSON_ID, RAPIDAPP_PERSON_ROSTER.FAMILY_NAME, RAPIDAPP_PERSON_ROSTER.FIRST_GIVEN_NAME, RAPIDAPP_PERSON_ROSTER.SECOND_GIVEN_NAME
-                                                                                        FROM (RAPIDAPP_INVESTIGATOR_PROGRAM INNER JOIN RAPIDAPP_PERSON_ROSTER ON RAPIDAPP_INVESTIGATOR_PROGRAM.PERSON_ID = RAPIDAPP_PERSON_ROSTER.PERSON_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP ON (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE) Is Null))
-                                                                                        WHERE RAPIDAPP_PROJECT_YEAR_LOOKUP.PROJECT_YEAR_NUMBER>=1
-                                                                                     ) ari_1_1
-                                                                                 UNION
-                                                                                 SELECT DISTINCT
-                                                                                     art_1_1.PERSON_ID,
-                                                                                     art_1_1.FAMILY_NAME,
-                                                                                     art_1_1.FIRST_GIVEN_NAME,
-                                                                                     art_1_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT pr_1.PERSON_ID, pr_1.FAMILY_NAME, pr_1.FIRST_GIVEN_NAME, pr_1.SECOND_GIVEN_NAME
-                                                                                        FROM (((RAPIDAPP_PERSON_ROSTER AS pr_1 INNER JOIN RAPIDAPP_TRAINING_ROSTER AS tr_1 ON pr_1.PERSON_ID = tr_1.PERSON_ID) INNER JOIN RAPIDAPP_PERSONNEL_TYPE_CODE AS ptc_1 ON tr_1.PERSONNEL_TYPE_CODE = ptc_1.CONCEPT_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP AS pyl_1 ON (
-                                                                                                ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE) Is Null))) LEFT JOIN RAPIDAPP_PERSON_ROSTER AS mpr_1 ON tr_1.MENTOR_PERSON_ID = mpr_1.PERSON_ID
-                                                                                        WHERE pyl_1.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) art_1_1
-                                                                                UNION
-                                                                                SELECT DISTINCT
-                                                                                    ia_1_1.PERSON_ID,
-                                                                                    ia_1_1.FAMILY_NAME,
-                                                                                    ia_1_1.FIRST_GIVEN_NAME,
-                                                                                    ia_1_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT tbl_Person_Aliases.PERSON_ID, tbl_Person_Aliases.FAMILY_NAME, tbl_Person_Aliases.FIRST_GIVEN_NAME, tbl_Person_Aliases.SECOND_GIVEN_NAME
-                                                                                        FROM (RAPIDAPP_INVESTIGATOR_PROGRAM INNER JOIN tbl_Person_Aliases ON RAPIDAPP_INVESTIGATOR_PROGRAM.PERSON_ID = tbl_Person_Aliases.PERSON_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP ON (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE) Is Null))
-                                                                                        WHERE RAPIDAPP_PROJECT_YEAR_LOOKUP.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) ia_1_1
-                                                                                UNION
-                                                                                SELECT DISTINCT
-                                                                                    ta_1_1.PERSON_ID,
-                                                                                    ta_1_1.FAMILY_NAME,
-                                                                                    ta_1_1.FIRST_GIVEN_NAME,
-                                                                                    ta_1_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT pr_1.PERSON_ID, pr_1.FAMILY_NAME, pr_1.FIRST_GIVEN_NAME, pr_1.SECOND_GIVEN_NAME
-                                                                                        FROM (((tbl_Person_Aliases AS pr_1 INNER JOIN RAPIDAPP_TRAINING_ROSTER AS tr_1 ON pr_1.PERSON_ID = tr_1.PERSON_ID) INNER JOIN RAPIDAPP_PERSONNEL_TYPE_CODE AS ptc_1 ON tr_1.PERSONNEL_TYPE_CODE = ptc_1.CONCEPT_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP AS pyl_1 ON (
-                                                                                                ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE) Is Null))) LEFT JOIN tbl_Person_Aliases AS mpr_1 ON tr_1.MENTOR_PERSON_ID = mpr_1.PERSON_ID
-                                                                                        WHERE pyl_1.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) ta_1_1
+                                                                                    sp_1_1.PERSON_ID,
+                                                                                    sp_1_1.FAMILY_NAME,
+                                                                                    sp_1_1.FIRST_GIVEN_NAME,
+                                                                                    sp_1_1.SECOND_GIVEN_NAME
+                                                                                FROM tbl_Search_Persons sp_1_1
                                                                             ) sq_1 INNER JOIN (
-                                                                                SELECT DISTINCT
-                                                                                     ari_2_1.PERSON_ID,
-                                                                                     ari_2_1.FAMILY_NAME,
-                                                                                     ari_2_1.FIRST_GIVEN_NAME,
-                                                                                     ari_2_1.SECOND_GIVEN_NAME
-                                                                                 FROM (
-                                                                                        SELECT DISTINCT RAPIDAPP_PERSON_ROSTER.PERSON_ID, RAPIDAPP_PERSON_ROSTER.FAMILY_NAME, RAPIDAPP_PERSON_ROSTER.FIRST_GIVEN_NAME, RAPIDAPP_PERSON_ROSTER.SECOND_GIVEN_NAME
-                                                                                        FROM (RAPIDAPP_INVESTIGATOR_PROGRAM INNER JOIN RAPIDAPP_PERSON_ROSTER ON RAPIDAPP_INVESTIGATOR_PROGRAM.PERSON_ID = RAPIDAPP_PERSON_ROSTER.PERSON_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP ON (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE) Is Null))
-                                                                                        WHERE RAPIDAPP_PROJECT_YEAR_LOOKUP.PROJECT_YEAR_NUMBER>=1
-                                                                                     ) ari_2_1
-                                                                                 UNION
                                                                                  SELECT DISTINCT
-                                                                                     art_2_1.PERSON_ID,
-                                                                                     art_2_1.FAMILY_NAME,
-                                                                                     art_2_1.FIRST_GIVEN_NAME,
-                                                                                     art_2_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT pr_1.PERSON_ID, pr_1.FAMILY_NAME, pr_1.FIRST_GIVEN_NAME, pr_1.SECOND_GIVEN_NAME
-                                                                                        FROM (((RAPIDAPP_PERSON_ROSTER AS pr_1 INNER JOIN RAPIDAPP_TRAINING_ROSTER AS tr_1 ON pr_1.PERSON_ID = tr_1.PERSON_ID) INNER JOIN RAPIDAPP_PERSONNEL_TYPE_CODE AS ptc_1 ON tr_1.PERSONNEL_TYPE_CODE = ptc_1.CONCEPT_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP AS pyl_1 ON (
-                                                                                                ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE) Is Null))) LEFT JOIN RAPIDAPP_PERSON_ROSTER AS mpr_1 ON tr_1.MENTOR_PERSON_ID = mpr_1.PERSON_ID
-                                                                                        WHERE pyl_1.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) art_2_1
-                                                                                UNION
-                                                                                SELECT DISTINCT
-                                                                                    ia_2_1.PERSON_ID,
-                                                                                    ia_2_1.FAMILY_NAME,
-                                                                                    ia_2_1.FIRST_GIVEN_NAME,
-                                                                                    ia_2_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT tbl_Person_Aliases.PERSON_ID, tbl_Person_Aliases.FAMILY_NAME, tbl_Person_Aliases.FIRST_GIVEN_NAME, tbl_Person_Aliases.SECOND_GIVEN_NAME
-                                                                                        FROM (RAPIDAPP_INVESTIGATOR_PROGRAM INNER JOIN tbl_Person_Aliases ON RAPIDAPP_INVESTIGATOR_PROGRAM.PERSON_ID = tbl_Person_Aliases.PERSON_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP ON (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE) Is Null))
-                                                                                        WHERE RAPIDAPP_PROJECT_YEAR_LOOKUP.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) ia_2_1
-                                                                                UNION
-                                                                                SELECT DISTINCT
-                                                                                    ta_2_1.PERSON_ID,
-                                                                                    ta_2_1.FAMILY_NAME,
-                                                                                    ta_2_1.FIRST_GIVEN_NAME,
-                                                                                    ta_2_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT pr_1.PERSON_ID, pr_1.FAMILY_NAME, pr_1.FIRST_GIVEN_NAME, pr_1.SECOND_GIVEN_NAME
-                                                                                        FROM (((tbl_Person_Aliases AS pr_1 INNER JOIN RAPIDAPP_TRAINING_ROSTER AS tr_1 ON pr_1.PERSON_ID = tr_1.PERSON_ID) INNER JOIN RAPIDAPP_PERSONNEL_TYPE_CODE AS ptc_1 ON tr_1.PERSONNEL_TYPE_CODE = ptc_1.CONCEPT_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP AS pyl_1 ON (
-                                                                                                ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE) Is Null))) LEFT JOIN tbl_Person_Aliases AS mpr_1 ON tr_1.MENTOR_PERSON_ID = mpr_1.PERSON_ID
-                                                                                        WHERE pyl_1.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) ta_2_1
+                                                                                    sp_1_2.PERSON_ID,
+                                                                                    sp_1_2.FAMILY_NAME,
+                                                                                    sp_1_2.FIRST_GIVEN_NAME,
+                                                                                    sp_1_2.SECOND_GIVEN_NAME
+                                                                                FROM tbl_Search_Persons sp_1_2
                                                                             ) sq_2 ON
                                                                                 sq_1.PERSON_ID < sq_2.PERSON_ID""",
                                                        'orderByClause' : """
@@ -240,76 +114,13 @@ class PubMedAccessPyODBCDatabaseSearch(PubMedAccessPyODBCDatabaseController):
                                                          'fromClause' : """
                                                                            FROM
                                                                                (
-                                                                                   SELECT DISTINCT
-                                                                                     ari_1_1_1.PERSON_ID,
-                                                                                     ari_1_1_1.FAMILY_NAME,
-                                                                                     ari_1_1_1.FIRST_GIVEN_NAME,
-                                                                                     ari_1_1_1.SECOND_GIVEN_NAME
-                                                                                 FROM (
-                                                                                        SELECT DISTINCT RAPIDAPP_PERSON_ROSTER.PERSON_ID, RAPIDAPP_PERSON_ROSTER.FAMILY_NAME, RAPIDAPP_PERSON_ROSTER.FIRST_GIVEN_NAME, RAPIDAPP_PERSON_ROSTER.SECOND_GIVEN_NAME
-                                                                                        FROM (RAPIDAPP_INVESTIGATOR_PROGRAM INNER JOIN RAPIDAPP_PERSON_ROSTER ON RAPIDAPP_INVESTIGATOR_PROGRAM.PERSON_ID = RAPIDAPP_PERSON_ROSTER.PERSON_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP ON (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE) Is Null))
-                                                                                        WHERE RAPIDAPP_PROJECT_YEAR_LOOKUP.PROJECT_YEAR_NUMBER>=1
-                                                                                     ) ari_1_1_1
-                                                                                 UNION
                                                                                  SELECT DISTINCT
-                                                                                     art_1_1_1.PERSON_ID,
-                                                                                     art_1_1_1.FAMILY_NAME,
-                                                                                     art_1_1_1.FIRST_GIVEN_NAME,
-                                                                                     art_1_1_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT pr_1.PERSON_ID, pr_1.FAMILY_NAME, pr_1.FIRST_GIVEN_NAME, pr_1.SECOND_GIVEN_NAME
-                                                                                        FROM (((RAPIDAPP_PERSON_ROSTER AS pr_1 INNER JOIN RAPIDAPP_TRAINING_ROSTER AS tr_1 ON pr_1.PERSON_ID = tr_1.PERSON_ID) INNER JOIN RAPIDAPP_PERSONNEL_TYPE_CODE AS ptc_1 ON tr_1.PERSONNEL_TYPE_CODE = ptc_1.CONCEPT_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP AS pyl_1 ON (
-                                                                                                ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE) Is Null))) LEFT JOIN RAPIDAPP_PERSON_ROSTER AS mpr_1 ON tr_1.MENTOR_PERSON_ID = mpr_1.PERSON_ID
-                                                                                        WHERE pyl_1.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) art_1_1_1
-                                                                                UNION
-                                                                                SELECT DISTINCT
-                                                                                    ia_1_1_1.PERSON_ID,
-                                                                                    ia_1_1_1.FAMILY_NAME,
-                                                                                    ia_1_1_1.FIRST_GIVEN_NAME,
-                                                                                    ia_1_1_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT tbl_Person_Aliases.PERSON_ID, tbl_Person_Aliases.FAMILY_NAME, tbl_Person_Aliases.FIRST_GIVEN_NAME, tbl_Person_Aliases.SECOND_GIVEN_NAME
-                                                                                        FROM (RAPIDAPP_INVESTIGATOR_PROGRAM INNER JOIN tbl_Person_Aliases ON RAPIDAPP_INVESTIGATOR_PROGRAM.PERSON_ID = tbl_Person_Aliases.PERSON_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP ON (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE And (RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)>=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_BEGIN_DATE)<=RAPIDAPP_PROJECT_YEAR_LOOKUP.REPORTING_YEAR_START_DATE) AND ((RAPIDAPP_INVESTIGATOR_PROGRAM.SUPPORT_COMPLETED_DATE) Is Null))
-                                                                                        WHERE RAPIDAPP_PROJECT_YEAR_LOOKUP.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) ia_1_1_1
-                                                                                UNION
-                                                                                SELECT DISTINCT
-                                                                                    ta_1_1_1.PERSON_ID,
-                                                                                    ta_1_1_1.FAMILY_NAME,
-                                                                                    ta_1_1_1.FIRST_GIVEN_NAME,
-                                                                                    ta_1_1_1.SECOND_GIVEN_NAME
-                                                                                FROM (
-                                                                                        SELECT DISTINCT pr_1.PERSON_ID, pr_1.FAMILY_NAME, pr_1.FIRST_GIVEN_NAME, pr_1.SECOND_GIVEN_NAME
-                                                                                        FROM (((tbl_Person_Aliases AS pr_1 INNER JOIN RAPIDAPP_TRAINING_ROSTER AS tr_1 ON pr_1.PERSON_ID = tr_1.PERSON_ID) INNER JOIN RAPIDAPP_PERSONNEL_TYPE_CODE AS ptc_1 ON tr_1.PERSONNEL_TYPE_CODE = ptc_1.CONCEPT_ID) INNER JOIN RAPIDAPP_PROJECT_YEAR_LOOKUP AS pyl_1 ON (
-                                                                                                ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE And (tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_END_DATE)>=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE)<=pyl_1.REPORTING_YEAR_END_DATE)) OR
-                                                                                                (((tr_1.APPOINTMENT_START_DATE)<=pyl_1.REPORTING_YEAR_START_DATE) AND ((tr_1.APPOINTMENT_END_DATE) Is Null))) LEFT JOIN tbl_Person_Aliases AS mpr_1 ON tr_1.MENTOR_PERSON_ID = mpr_1.PERSON_ID
-                                                                                        WHERE pyl_1.PROJECT_YEAR_NUMBER>=1
-                                                                                    ) ta_1_1_1
-                                                                               )  AS sq_1_1, RAPIDAPP_ACTSI_ORGANIZATION_LOOKUP aol_1_1
+                                                                                    sp_1_1_1.PERSON_ID,
+                                                                                    sp_1_1_1.FAMILY_NAME,
+                                                                                    sp_1_1_1.FIRST_GIVEN_NAME,
+                                                                                    sp_1_1_1.SECOND_GIVEN_NAME
+                                                                                FROM tbl_Search_Persons sp_1_1_1
+                                                                               )  AS sq_1_1, tbl_Search_Organizations aol_1_1
                                                                            WHERE aol_1_1.ACTSI_ORGANIZATION_ID <> 13""",
                                                          'orderByClause' : """
                                                                               ORDER BY
