@@ -40,7 +40,7 @@
 		<SearchToolName>Bibliometric Analysis PubMed Search Tool v3.4</SearchToolName>
 		<EUtilsUseHistory>no</EUtilsUseHistory>
 		<ResetDatabaseTables>yes</ResetDatabaseTables>
-		<EUtilsAddress>http://eutils.ncbi.nlm.nih.gov/entrez/eutils</EUtilsAddress>
+		<EUtilsAddress>https://eutils.ncbi.nlm.nih.gov/entrez/eutils</EUtilsAddress>
 		<EMailAddress>emailaddress@example.com</EMailAddress>
 		<HTTPDelay>1</HTTPDelay>
 		<WeekdayHours>
