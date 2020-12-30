@@ -469,6 +469,27 @@ class PubMedSearchSettings:
                 database_connection_properties['passwd'] = database_passwd.strip()
                 database_connection_properties['db'] = database_db.strip()
 
+        elif database_connection_type_case == 'POSTGRESQLDRIVER':
+            
+            database_host = None
+            database_user = None
+            database_passwd = None
+            database_db = None
+            
+            try:
+                database_host = self.search_settings.get_string_cdata('<BiblioAnalysisSettings><DatabaseConnection><Host>').strip()
+                database_user = self.search_settings.get_string_cdata('<BiblioAnalysisSettings><DatabaseConnection><User>').strip()
+                database_passwd = self.search_settings.get_string_cdata('<BiblioAnalysisSettings><DatabaseConnection><Passwd>').strip()
+                database_db = self.search_settings.get_string_cdata('<BiblioAnalysisSettings><DatabaseConnection><DB>').strip()
+            except TypeError:
+                pass
+            
+            if database_host and database_user and database_passwd and database_db:
+                database_connection_properties['host'] = database_host.strip()
+                database_connection_properties['user'] = database_user.strip()
+                database_connection_properties['passwd'] = database_passwd.strip()
+                database_connection_properties['db'] = database_db.strip()
+
         return database_connection_properties
     
     def get_search_tool_name(self):

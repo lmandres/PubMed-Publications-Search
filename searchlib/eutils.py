@@ -297,6 +297,8 @@ class IteratePubMedEFetchData(QueryEUtilsBase):
     result_count = 0
     result_return_maximum = 0
     result_return_start = 0
+
+    ingest_file_path = None
     
     efetch_pubmed_data_iter = None
     
@@ -335,39 +337,41 @@ class IteratePubMedEFetchData(QueryEUtilsBase):
             self.eutils_efetch_variables['retstart'] = None
             self.eutils_efetch_variables['retmax'] = None
 
-        self.set_base_eutils_url(efetch_settings_in['base_address'] + '/efetch.fcgi')
+        if efetch_settings_in:
+
+            self.set_base_eutils_url(efetch_settings_in['base_address'] + '/efetch.fcgi')
         
-        try:
-            self.set_sleep_delay(int(efetch_settings_in['sleep_delay']))
-        except TypeError:
-            pass
+            try:
+                self.set_sleep_delay(int(efetch_settings_in['sleep_delay']))
+            except TypeError:
+                pass
         
-        try:
-            self.set_maximum_tries(int(efetch_settings_in['maximum_tries']))
-        except TypeError:
-            pass
+            try:
+                self.set_maximum_tries(int(efetch_settings_in['maximum_tries']))
+            except TypeError:
+                pass
         
-        try:
-            self.set_timeout(int(efetch_settings_in['timeout']))
-        except TypeError:
-            pass
+            try:
+                self.set_timeout(int(efetch_settings_in['timeout']))
+            except TypeError:
+                pass
         
-        try:
-            self.set_maximum_url_length(int(efetch_settings_in['maximum_url_length']))
-        except TypeError:
-            pass
+            try:
+                self.set_maximum_url_length(int(efetch_settings_in['maximum_url_length']))
+            except TypeError:
+                pass
         
-        try:
-            self.result_return_maximum = int(efetch_settings_in['retmax'])
-        except TypeError:
-            pass
+            try:
+                self.result_return_maximum = int(efetch_settings_in['retmax'])
+            except TypeError:
+                pass
         
-        try:
-            self.result_count = int(efetch_settings_in['result_count'])
-        except TypeError:
-            pass
+            try:
+                self.result_count = int(efetch_settings_in['result_count'])
+            except TypeError:
+                pass
         
-        self.efetch_pubmed_data_iter = None
+            self.efetch_pubmed_data_iter = None
     
     def __iter__(self):
         return self
@@ -376,10 +380,28 @@ class IteratePubMedEFetchData(QueryEUtilsBase):
         
         if self.eutils_efetch_variables['query_key'] != None:
             return self.next_by_query_key()
+        elif self.ingest_file_path:
+            return self.next_by_file_data()
         else:
             return self.next_by_id_list()
-            
+
     
+    def load_iter_file(self, file_name):
+        self.ingest_file_path = file_name
+        filein = open(file_name, 'rb')
+        xml_string = filein.read()
+        filein.close()
+        self.efetch_pubmed_data_iter = re.finditer(b'(<PubmedArticle>.*?</PubmedArticle>)', xml_string, re.DOTALL)
+
+    def next_by_file_data(self):
+        
+        try:
+            return self.efetch_pubmed_data_iter.__next__().group(1)
+        except AttributeError:
+            pass
+        except StopIteration:
+            raise StopIteration
+                
     def next_by_query_key(self):
         
         try:

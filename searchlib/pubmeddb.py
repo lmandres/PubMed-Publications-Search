@@ -199,6 +199,23 @@ class PubMedSearchDatabaseController:
             successful_open = self.database_manager.open_database(host = host_out, user = user_out, password = passwd_out, database = db_out)
             if successful_open:
                 successful_open = self.database_search.open_database(host = host_out, user = user_out, password = passwd_out, database = db_out)
+
+        elif database_connection_type_case == 'POSTGRESQLDRIVER':
+
+            import searchlib.pgsqldriver
+            
+            self.database_manager = searchlib.pgsqldriver.PubMedPostgreSQLDatabaseManager()
+            self.database_search = searchlib.pgsqldriver.PubMedPostgreSQLDatabaseSearch()
+        
+            host_out = self.connection_properties['host'].strip()
+            user_out = self.connection_properties['user'].strip()
+            passwd_out = self.connection_properties['passwd'].strip()
+            db_out = self.connection_properties['db'].strip()
+            
+            successful_open = self.database_manager.open_database(host = host_out, user = user_out, password = passwd_out, database = db_out)
+            if successful_open:
+                successful_open = self.database_search.open_database(host = host_out, user = user_out, password = passwd_out, database = db_out)
+            
             
         return successful_open
     
