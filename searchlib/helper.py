@@ -582,6 +582,9 @@ class PubMedSearchSettings:
     def get_email_address(self):
         return self.search_settings.get_string_cdata('<BiblioAnalysisSettings><SearchPubMedSettings><EMailAddress>')
     
+    def get_api_key(self):
+        return self.search_settings.get_string_cdata('<BiblioAnalysisSettings><SearchPubMedSettings><APIKey>')
+    
     def get_http_delay(self):
         return self.search_settings.get_integer_cdata('<BiblioAnalysisSettings><SearchPubMedSettings><HTTPDelay>')
     

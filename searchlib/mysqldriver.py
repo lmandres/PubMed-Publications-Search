@@ -575,16 +575,16 @@ class PubMedMySQLDatabaseManager(PubMedMySQLDatabaseController):
                                                  Publication_ID MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
                                                  PubMed_ID VARCHAR(8),
                                                  Journal VARCHAR(255),
-                                                 PMCID VARCHAR(11),
+                                                 PMCID VARCHAR(255),
                                                  Publish_Month SMALLINT,
                                                  Publish_Year SMALLINT,
                                                  Medline_Date VARCHAR(25),
-                                                 Authors VARCHAR(255),
-                                                 Title VARCHAR(512),
+                                                 Authors TEXT,
+                                                 Title TEXT,
                                                  Affiliation VARCHAR(255),
                                                  Volume VARCHAR(25),
-                                                 Issue_Number VARCHAR(25),
-                                                 Pages VARCHAR(25),
+                                                 Issue_Number TEXT,
+                                                 Pages TEXT,
                                                  Author_List_Complete BOOLEAN,
                                                  Grant_List_Complete BOOLEAN,
                                                  PubMed_XML TEXT,
@@ -601,12 +601,12 @@ class PubMedMySQLDatabaseManager(PubMedMySQLDatabaseController):
                              'tableName' : 'tbl_Grants',
                              'tableColumns' : """
                                                  Grant_ID MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                                                 Grant_Number VARCHAR(25),
+                                                 Grant_Number TEXT,
                                                  PHS_Activity_Code CHAR(3),
                                                  PHS_Organization CHAR(2),
-                                                 PHS_Six_Digit_Grant_Number CHAR(6),
-                                                 Acronym VARCHAR(25),
-                                                 Agency VARCHAR(64),
+                                                 PHS_Six_Digit_Grant_Number VARCHAR(64),
+                                                 Acronym TEXT,
+                                                 Agency TEXT,
                                                  Country VARCHAR(25),
                                                  CTSA_Grant_Number_ID MEDIUMINT,
 						PRIMARY KEY (Grant_ID)"""},
@@ -621,9 +621,9 @@ class PubMedMySQLDatabaseManager(PubMedMySQLDatabaseController):
                              'tableName' : 'tbl_Coauthors',
                              'tableColumns' : """
                                                  Coauthor_ID MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                                                 LastName VARCHAR(64),
-                                                 FirstName VARCHAR(64),
-                                                 Initials VARCHAR(5),
+                                                 LastName VARCHAR(255),
+                                                 FirstName VARCHAR(255),
+                                                 Initials TEXT,
                                                  Affiliation VARCHAR(255),
 						PRIMARY KEY (Coauthor_ID)"""},
                             {
@@ -779,7 +779,6 @@ class PubMedMySQLDatabaseManager(PubMedMySQLDatabaseController):
                                   Authors = %s,
                                   Title = %s,
                                   Affiliation = %s,
-                                  PubMed_XML = %s,
                                   PubMed_XML_Date = Now()"""
             
             db_parameters = []
@@ -789,7 +788,6 @@ class PubMedMySQLDatabaseManager(PubMedMySQLDatabaseController):
             db_parameters.append(authors_in.encode('utf-8', 'xmlcharrefreplace'))
             db_parameters.append(article_title_in.encode('utf-8', 'xmlcharrefreplace'))
             db_parameters.append(affiliation_in)
-            db_parameters.append(pubmed_xml_in)
             
             if pmcid_in != None:
                 sql_query_fields += ", PMCID = %s"
@@ -844,10 +842,9 @@ class PubMedMySQLDatabaseManager(PubMedMySQLDatabaseController):
                                   Authors,
                                   Title,
                                   Affiliation,
-                                  PubMed_XML,
                                   PubMed_XML_Date"""
             
-            sql_query_values = "%s, %s, %s, %s, %s, %s, %s, Now()"
+            sql_query_values = "%s, %s, %s, %s, %s, %s, Now()"
                                                                          
             db_parameters = []
             
@@ -857,7 +854,6 @@ class PubMedMySQLDatabaseManager(PubMedMySQLDatabaseController):
             db_parameters.append(authors_in.encode('utf-8', 'xmlcharrefreplace'))
             db_parameters.append(article_title_in.encode('utf-8', 'xmlcharrefreplace'))
             db_parameters.append(affiliation_in)
-            db_parameters.append(pubmed_xml_in)
             
             if pmcid_in != None:
                 sql_query_fields += ", PMCID"

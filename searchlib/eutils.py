@@ -190,7 +190,8 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
                                          'email' : None,
                                          'tool' : None,
                                          'query_key' : None,
-                                         'WebEnv' : None}
+                                         'WebEnv' : None,
+                                         'api_key' : None}
         
         for dict_key in self.eutils_esearch_variables:
             try:
@@ -314,7 +315,8 @@ class IteratePubMedEFetchData(QueryEUtilsBase):
                                'email' : None,
                                'tool' : None,
                                'query_key' : None,
-                               'WebEnv' : None}
+                               'WebEnv' : None,
+                               'api_key' : None}
     
     def __init__(self, efetch_settings_in, efetch_pubmed_id_iterable_in=None):
         
@@ -539,7 +541,8 @@ class IteratePubMedCentralELinkCitedByPMCIDs(QueryEUtilsBase):
                                'db' : 'pmc',
                                'id' : None,
                                'email' : None,
-                               'tool' : None}
+                               'tool' : None,
+                               'api_key' : None}
     
     def __init__(self, elink_settings_in, elink_pmcids_in):
         
@@ -634,7 +637,8 @@ class IteratePubMedIDELinkCitedByPubMedIDs(QueryEUtilsBase):
                                'db' : 'pubmed',
                                'id' : None,
                                'email' : None,
-                               'tool' : None}
+                               'tool' : None,
+                               'api_key' : None}
     
     def __init__(self, elink_settings_in, elink_pubmed_ids_in):
         
@@ -732,7 +736,8 @@ class IteratePubMedCentralELinkToPubMedIDs(QueryEUtilsBase):
                                'db' : 'pubmed',
                                'id' : None,
                                'email' : None,
-                               'tool' : None}
+                               'tool' : None,
+                               'api_key' : None}
     
     def __init__(self, elink_settings_in, elink_pmcid_iter_in):
         
@@ -871,7 +876,8 @@ class IteratePubMedIDELinkNeighborPubMedIDs(QueryEUtilsBase):
                                'id' : None,
                                'cmd' : 'neighbor_score',
                                'email' : None,
-                               'tool' : None}
+                               'tool' : None,
+                               'api_key' : None}
     
     def __init__(self, elink_settings_in, elink_pubmed_ids_in):
         
@@ -974,6 +980,7 @@ class EUtilsPubMed:
                        'maximum_url_length' : None,
                        'retmax' : 100000,
                        'usehistory' : 'y',
+                       'api_key' : None,
                        'term' : None,
                        'email' : None,
                        'tool' : None,
@@ -1041,6 +1048,12 @@ class EUtilsPubMed:
             return self.eutils_settings['usehistory']
         except KeyError:
             return None
+
+    def set_api_key(self, api_key_in):
+        self.eutils_settings['api_key'] = api_key_in
+
+    def get_api_key(self):
+        return self.eutils_settings['api_key']
         
     def set_email_address(self, email_in):
         self.eutils_settings['email'] = email_in

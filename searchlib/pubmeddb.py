@@ -301,7 +301,7 @@ class PubMedSearchDatabaseController:
                 
             if return_search_term != None or self.search_strategy_running_flags == 0:
                 break
-            
+
         return return_search_term
 
     def read_pubmed_article(self, article_xml_in):
