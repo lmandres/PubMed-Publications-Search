@@ -33,6 +33,7 @@ class PubMedSearchApp:
         self.search_tool.set_eutils_use_history(self.search_settings.get_eutils_use_history())
         self.search_tool.set_email_address(self.search_settings.get_email_address())
         self.search_tool.set_tool_name(self.search_settings.get_search_tool_name())
+        self.search_tool.set_api_key(self.search_settings.get_api_key())
     
     def run_pubmed_search(self):
         
