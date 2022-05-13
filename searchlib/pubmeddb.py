@@ -304,7 +304,7 @@ class PubMedSearchDatabaseController:
 
         return return_search_term
 
-    def read_pubmed_article(self, article_xml_in):
+    def read_pubmed_article(self, article_xml_in, filter_date_years=[]):
     
         def __get_pubmed_id(pubmed_parser_in):
             return pubmed_parser_in.get_string_cdata('<PubmedArticle><MedlineCitation><PMID>')
@@ -618,8 +618,18 @@ class PubMedSearchDatabaseController:
         
         self.pubmed_article_xml = article_xml_in
         self.pubmed_parser.parse_xml_string(self.pubmed_article_xml, True)
+
+        if filter_date_years:
+
+            date_year = None
+            try:
+                date_year = int(__get_article_year(self.pubmed_parser))
+            except ValueError:
+                pass
+
+            if date_year and date_year in filter_date_years:
         
-        current_publication_id = self.database_manager.insert_update_publication(
+                current_publication_id = self.database_manager.insert_update_publication(
                                                                                     __get_pubmed_id(self.pubmed_parser),
                                                                                     __get_journal_title(self.pubmed_parser),
                                                                                     __get_pmcid(self.pubmed_parser),
@@ -636,11 +646,36 @@ class PubMedSearchDatabaseController:
                                                                                     __get_grant_list_complete(self.pubmed_parser),
                                                                                     self.pubmed_article_xml.decode('utf-8', 'ignore'))
         
-        __add_publication_coauthors(self.pubmed_parser, self.database_manager, current_publication_id)
-        __add_publication_mesh_terms(self.pubmed_parser, self.database_manager, current_publication_id)
-        __add_publication_grants(self.pubmed_parser, self.database_manager, current_publication_id)
+                __add_publication_coauthors(self.pubmed_parser, self.database_manager, current_publication_id)
+                __add_publication_mesh_terms(self.pubmed_parser, self.database_manager, current_publication_id)
+                __add_publication_grants(self.pubmed_parser, self.database_manager, current_publication_id)
+
+                return __get_pubmed_id(self.pubmed_parser)
+
+        else:
+
+            current_publication_id = self.database_manager.insert_update_publication(
+                                                                                    __get_pubmed_id(self.pubmed_parser),
+                                                                                    __get_journal_title(self.pubmed_parser),
+                                                                                    __get_pmcid(self.pubmed_parser),
+                                                                                    __get_medline_date(self.pubmed_parser),
+                                                                                    __get_authors(self.pubmed_parser),
+                                                                                    __get_article_title(self.pubmed_parser),
+                                                                                    __get_affiliation(self.pubmed_parser),
+                                                                                    __get_volume(self.pubmed_parser),
+                                                                                    __get_issue(self.pubmed_parser),
+                                                                                    __get_pagination(self.pubmed_parser),
+                                                                                    __get_article_year(self.pubmed_parser),
+                                                                                    __get_article_month(self.pubmed_parser),
+                                                                                    __get_author_list_complete(self.pubmed_parser),
+                                                                                    __get_grant_list_complete(self.pubmed_parser),
+                                                                                    self.pubmed_article_xml.decode('utf-8', 'ignore'))
         
-        return __get_pubmed_id(self.pubmed_parser)
+            __add_publication_coauthors(self.pubmed_parser, self.database_manager, current_publication_id)
+            __add_publication_mesh_terms(self.pubmed_parser, self.database_manager, current_publication_id)
+            __add_publication_grants(self.pubmed_parser, self.database_manager, current_publication_id)
+        
+            return __get_pubmed_id(self.pubmed_parser)
     
     def join_investigator_pubmed_id(self, person_id_in, pubmed_id_in):
         
