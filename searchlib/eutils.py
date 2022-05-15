@@ -151,6 +151,9 @@ class QueryEUtilsBase:
                 # ADD SOMETHING HERE TO DESCRIBE THE ERROR BETTER
                 print('Bad status line (?).')
                 print(bsl)
+            except http.client.IncompleteRead as ir:
+                print('Incomplete read (?).')
+                print(ir)
                 
             if xml_string != None:
                 break
