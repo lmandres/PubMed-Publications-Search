@@ -177,12 +177,16 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
 
     eutils_esearch_variables = None
     
-    def __init__(self, esearch_settings_in, esearch_pubmed_id_iterable_in=[]):
+    def __init__(self,
+        esearch_settings_in,
+        esearch_base=None,
+        esearch_pubmed_id_iterable_in=[]
+    ):
             
         self.result_count = 0
         self.result_return_maximum = 0
         self.result_return_start = 0
-        
+
         self.eutils_esearch_variables = {
                                          'rettype' : 'uilist',
                                          'retstart' : 0,
@@ -198,9 +202,7 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
 
         for dict_key in self.eutils_esearch_variables:
             try:
-                if dict_key == 'term' and esearch_pubmed_id_iterable_in:
-                    self.esearch_base = esearch_settings_in[dict_key]
-                elif self.eutils_esearch_variables[dict_key] == None and esearch_settings_in[dict_key] != None:
+                if self.eutils_esearch_variables[dict_key] == None and esearch_settings_in[dict_key] != None:
                     self.eutils_esearch_variables[dict_key] = esearch_settings_in[dict_key]
             except KeyError:
                 pass
@@ -216,7 +218,9 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
         self.result_idlist_iter = None
         self.esearch_base = None
         self.esearch_pubmed_id_iterable = None
-        if esearch_pubmed_id_iterable_in:
+
+        if esearch_base:
+            self.esearch_base = esearch_base
             self.esearch_pubmed_id_iterable = esearch_pubmed_id_iterable_in
             self.__run_id_list_eutils_esearch_request()
         self.__run_eutils_esearch_request()
@@ -368,8 +372,8 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
                         break
                 else:
                     break
-        
-        if len(esearch_pubmed_id_list) > 0: 
+       
+        if self.esearch_base and len(esearch_pubmed_id_list) > 0: 
             self.eutils_esearch_variables['term'] =  "(({}) AND ({}))".format(
                 self.esearch_base,
                 ' OR '.join(["{}[uid]".format(str(list_item).strip()) for list_item in esearch_pubmed_id_list])
@@ -1150,13 +1154,19 @@ class EUtilsPubMed:
     def get_tool_name(self):
         return self.eutils_settings['tool']
 
-    def pubmed_esearch_id_iter(self, esearch_term_in, esearch_pubmed_id_iterable_in=[]):
+    def pubmed_esearch_id_iter(
+        self,
+        esearch_term_in,
+        esearch_base=None,
+        esearch_pubmed_id_iterable_in=[]
+    ):
                         
         self.eutils_settings['term'] = esearch_term_in
 
-        if esearch_pubmed_id_iterable_in:
+        if esearch_base:
             pubmed_esearch_results = IteratePubMedESearchResults(
                 self.eutils_settings,
+                esearch_base=esearch_base,
                 esearch_pubmed_id_iterable_in=esearch_pubmed_id_iterable_in
             )
         else:

@@ -198,12 +198,12 @@ class PubMedSearchApp:
         elink_pubmed_id_iter = []
         
         elink_search_pmcid = self.pubmed_database.get_pmcid_from_pubmed_id(esearch_pubmed_id)
-            
+
         if elink_search_pmcid:
         
             if not self.search_tool.get_eutils_use_history():
                 self.sleep_during_weekday_hours()
-            
+
             for elink_pubmed_id in self.search_tool.elink_pmcids_link_to_pubmed_ids(
                 self.search_tool.elink_pmcid_cited_by_pmcids(elink_search_pmcid)
             ):
@@ -214,21 +214,21 @@ class PubMedSearchApp:
             else:
                 elink_pubmed_id_iter = self.pubmed_database.filter_missing_pubmed_ids(elink_pubmed_id_list)
 
+            for pubmed_data in self.search_tool.pubmed_efetch_data_iter(elink_pubmed_id_iter):
+                self.pubmed_database.read_pubmed_article(pubmed_data)
+
             if filter_date_year:
                 elink_pubmed_id_iter = self.search_tool.pubmed_esearch_id_iter(
-                    "{}[pdat]".format(
+                    None,
+                    esearch_base="{}[pdat]".format(
                         filter_date_year
                     ),
-                    esearch_pubmed_id_iterable_in=elink_pubmed_id_iter
+                    esearch_pubmed_id_iterable_in=elink_pubmed_id_list
                 )
+            else:
+                elink_pubmed_id_iter  = elink_pubmed_id_list
 
-            elink_pubmed_id_list = []
-            for pubmed_data in self.search_tool.pubmed_efetch_data_iter(elink_pubmed_id_iter):
-                return_pubmed_id = self.pubmed_database.read_pubmed_article(pubmed_data)
-                if return_pubmed_id:
-                    elink_pubmed_id_list.append(return_pubmed_id)
-
-            for elink_pubmed_id in elink_pubmed_id_list:
+            for elink_pubmed_id in elink_pubmed_id_iter:
                 self.pubmed_database.join_pmcid_cited_by_pmcid(esearch_pubmed_id, elink_pubmed_id)
                     
     def search_pubmed_id_neighbor_pubmed_ids(self, esearch_pubmed_id):
