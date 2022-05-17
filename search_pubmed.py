@@ -9,7 +9,7 @@ import searchlib.pubmeddb
 
 import sys
 
-three_year_citation_factor_year = 2021 
+three_year_citation_factor_year = 2021
 
 class PubMedSearchApp:
     
@@ -69,11 +69,20 @@ class PubMedSearchApp:
                     if search_term == None:
                         break
 
+                    filter_year_start = None
+                    filter_year_end = None
+                    citation_filter_year = None
+
                     if three_year_citation_factor_year:
-                        search_term = "({} AND ({}[Date - Publication] : {}[Date - Publication]))".format(
+                        filter_year_start = three_year_citation_factor_year-2
+                        filter_year_end = three_year_citation_factor_year-1
+                        citation_filter_year = three_year_citation_factor_year
+
+                    if filter_year_start and filter_year_end:
+                        search_term = "(({}) AND ({}[pdat] : {}[pdat]))".format(
                             search_term,
-                            three_year_citation_factor_year-2,
-                            three_year_citation_factor_year-1
+                            filter_year_start,
+                            filter_year_end
                         )
 
                     print(search_term)
@@ -114,10 +123,10 @@ class PubMedSearchApp:
                                 esearch_pubmed_id = self.pubmed_database.read_pubmed_article(pubmed_data)
                                 
                                 if self.search_settings.get_search_strategies() & self.pubmed_database.PMCID_CITE_BY_PMCID:
-                                    if three_year_citation_factor_year:
+                                    if citation_filter_year:
                                         self.search_pmcid_cited_by_pmcids(
                                             esearch_pubmed_id,
-                                            filter_date_years=[three_year_citation_factor_year]
+                                            filter_date_year=citation_filter_year
                                         )
                                     else:
                                         self.search_pmcid_cited_by_pmcids(
@@ -183,7 +192,7 @@ class PubMedSearchApp:
             for elink_pubmed_id in elink_pubmed_id_list:
                 self.pubmed_database.join_pubmed_id_cited_by_pubmed_id(esearch_pubmed_id, elink_pubmed_id)
                     
-    def search_pmcid_cited_by_pmcids(self, esearch_pubmed_id, filter_date_years=[]):
+    def search_pmcid_cited_by_pmcids(self, esearch_pubmed_id, filter_date_year=None):
                             
         elink_pubmed_id_list = []
         elink_pubmed_id_iter = []
@@ -195,20 +204,30 @@ class PubMedSearchApp:
             if not self.search_tool.get_eutils_use_history():
                 self.sleep_during_weekday_hours()
             
-            for elink_pubmed_id in self.search_tool.elink_pmcids_link_to_pubmed_ids(self.search_tool.elink_pmcid_cited_by_pmcids(elink_search_pmcid)):
+            for elink_pubmed_id in self.search_tool.elink_pmcids_link_to_pubmed_ids(
+                self.search_tool.elink_pmcid_cited_by_pmcids(elink_search_pmcid)
+            ):
                 elink_pubmed_id_list.append(elink_pubmed_id)
                 
             if self.search_settings.get_update_publication_results():
                 elink_pubmed_id_iter = elink_pubmed_id_list
             else:
                 elink_pubmed_id_iter = self.pubmed_database.filter_missing_pubmed_ids(elink_pubmed_id_list)
-    
+
+            if filter_date_year:
+                elink_pubmed_id_iter = self.search_tool.pubmed_esearch_id_iter(
+                    "{}[pdat]".format(
+                        filter_date_year
+                    ),
+                    esearch_pubmed_id_iterable_in=elink_pubmed_id_iter
+                )
+
             elink_pubmed_id_list = []
             for pubmed_data in self.search_tool.pubmed_efetch_data_iter(elink_pubmed_id_iter):
-                return_pubmed_id = self.pubmed_database.read_pubmed_article(pubmed_data, filter_date_years=filter_date_years)
+                return_pubmed_id = self.pubmed_database.read_pubmed_article(pubmed_data)
                 if return_pubmed_id:
                     elink_pubmed_id_list.append(return_pubmed_id)
-            
+
             for elink_pubmed_id in elink_pubmed_id_list:
                 self.pubmed_database.join_pmcid_cited_by_pmcid(esearch_pubmed_id, elink_pubmed_id)
                     

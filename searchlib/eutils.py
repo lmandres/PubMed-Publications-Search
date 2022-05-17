@@ -177,7 +177,7 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
 
     eutils_esearch_variables = None
     
-    def __init__(self, esearch_settings_in):
+    def __init__(self, esearch_settings_in, esearch_pubmed_id_iterable_in=[]):
             
         self.result_count = 0
         self.result_return_maximum = 0
@@ -195,10 +195,12 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
                                          'query_key' : None,
                                          'WebEnv' : None,
                                          'api_key' : None}
-        
+
         for dict_key in self.eutils_esearch_variables:
             try:
-                if self.eutils_esearch_variables[dict_key] == None and esearch_settings_in[dict_key] != None:
+                if dict_key == 'term' and esearch_pubmed_id_iterable_in:
+                    self.esearch_base = esearch_settings_in[dict_key]
+                elif self.eutils_esearch_variables[dict_key] == None and esearch_settings_in[dict_key] != None:
                     self.eutils_esearch_variables[dict_key] = esearch_settings_in[dict_key]
             except KeyError:
                 pass
@@ -212,6 +214,11 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
         self.set_timeout(esearch_settings_in['timeout'])
             
         self.result_idlist_iter = None
+        self.esearch_base = None
+        self.esearch_pubmed_id_iterable = None
+        if esearch_pubmed_id_iterable_in:
+            self.esearch_pubmed_id_iterable = esearch_pubmed_id_iterable_in
+            self.__run_id_list_eutils_esearch_request()
         self.__run_eutils_esearch_request()
     
     def __iter__(self):
@@ -225,6 +232,8 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
 
             if self.result_count <= (self.result_return_maximum + self.result_return_start):
                 raise StopIteration
+            elif not self.eutils_esearch_variables['term']:
+                raise StopIteration
             else:
                 
                 self.eutils_esearch_variables['retstart'] = self.eutils_esearch_variables['retstart'] + self.eutils_esearch_variables['retmax']
@@ -233,8 +242,10 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
                     print('\nRetrieving Articles ' + str(self.eutils_esearch_variables['retstart'] + 1) + ' to ' + str(self.result_count) + '.')
                 else:
                     print('\nRetrieving Articles ' + str(self.eutils_esearch_variables['retstart'] + 1) + ' to ' + str(self.eutils_esearch_variables['retstart'] + self.eutils_esearch_variables['retmax']) + '.')
-        
+
                 self.result_idlist_iter = None
+                if self.esearch_pubmed_id_iterable:
+                    self.__run_id_list_eutils_esearch_request()
                 self.__run_eutils_esearch_request()
         
                 try:
@@ -252,9 +263,14 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
         return self.result_count
     
     def __run_eutils_esearch_request(self):
-        
+
+        match = None
         while True:
-            
+
+            if not self.eutils_esearch_variables['term']:
+                self.result_idlist_iter = [].__iter__()
+                break
+
             xml_string = self.run_eutils_request(self.eutils_esearch_variables)
             
             match = re.search(b'<Count>(\d+)</Count>.*?<RetMax>(\d+)</RetMax>.*?<RetStart>(\d+)</RetStart>.*?(<IdList>.*?</IdList>)', xml_string, re.DOTALL)
@@ -264,12 +280,14 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
             match = re.search(b'<Count>(\d+)</Count>.*?<RetMax>(\d+)</RetMax>.*?<RetStart>(\d+)</RetStart>.*?(<IdList/>)', xml_string, re.DOTALL)
             if match:
                 break
-            
-        self.result_count = int(match.group(1))
-        self.result_return_maximum = int(match.group(2))
-        self.result_return_start = int(match.group(3))
 
-        self.result_idlist_iter = re.finditer(b'<Id>(\d+)</Id>', match.group(4), re.DOTALL)
+        if match:
+
+            self.result_count = int(match.group(1))
+            self.result_return_maximum = int(match.group(2))
+            self.result_return_start = int(match.group(3))
+
+            self.result_idlist_iter = re.finditer(b'<Id>(\d+)</Id>', match.group(4), re.DOTALL)
         
         try:
             self.eutils_esearch_variables['query_key'] = None
@@ -295,6 +313,68 @@ class IteratePubMedESearchResults(QueryEUtilsBase):
                     
         except KeyError:
             pass
+
+    def __run_id_list_eutils_esearch_request(self):
+        
+        xml_string = None
+        
+        esearch_post_variables = {}
+        esearch_pubmed_id_list = []
+        esearch_post_data = None
+        
+        for dict_key in self.eutils_esearch_variables:
+            if self.eutils_esearch_variables[dict_key] != None:
+                esearch_post_variables[dict_key] = self.eutils_esearch_variables[dict_key]
+            
+        if self.maximum_url_length == None:
+            
+            if self.esearch_pubmed_id_iterable:
+                for list_item in self.esearch_pubmed_id_iterable:
+                    esearch_pubmed_id_list.append(list_item)
+                
+        else:
+        
+            if self.efetch_last_pubmed_id != None:
+                esearch_pubmed_id_list.append(self.esearch_last_pubmed_id)
+            
+            while True:
+               
+                if esearch_pubmed_id_list:
+                    esearch_post_variables['term'] =  "(({}) AND ({}))".format(
+                        self.esearch_base,
+                        ' OR '.join(["{}[uid]".format(str(list_item).strip()) for list_item in esearch_pubmed_id_list])
+                    )
+                
+                self.esearch_last_pubmed_id = None
+                try:
+                    self.esearch_last_pubmed_id = self.esearch_pubmed_id_iter.__next__()
+                    if esearch_pubmed_id_list: 
+                        esearch_post_variables['term'] =  "(({}) AND ({}))".format(
+                            self.esearch_base,
+                            ' OR '.join(["{}[uid]".format(str(list_item).strip()) for list_item in esearch_pubmed_id_list])
+                        )
+                except StopIteration:
+                    pass
+                
+                if self.maximum_url_length <= 1600:
+                    esearch_post_data = self.get_base_eutils_url() + '?' + urllib.parse.urlencode(esearch_post_variables)
+                else:
+                    esearch_post_data = urllib.parse.urlencode(esearch_post_variables)
+                
+                if len(esearch_post_data) <= self.maximum_url_length:
+                    if self.esearch_last_pubmed_id != None:
+                        esearch_pubmed_id_list.append(self.esearch_last_pubmed_id)
+                    else:
+                        break
+                else:
+                    break
+        
+        if len(esearch_pubmed_id_list) > 0: 
+            self.eutils_esearch_variables['term'] =  "(({}) AND ({}))".format(
+                self.esearch_base,
+                ' OR '.join(["{}[uid]".format(str(list_item).strip()) for list_item in esearch_pubmed_id_list])
+            )
+
 
 class IteratePubMedEFetchData(QueryEUtilsBase):
 
@@ -1069,29 +1149,43 @@ class EUtilsPubMed:
         
     def get_tool_name(self):
         return self.eutils_settings['tool']
-    
-    def pubmed_esearch_id_iter(self, esearch_term_in):
+
+    def pubmed_esearch_id_iter(self, esearch_term_in, esearch_pubmed_id_iterable_in=[]):
                         
         self.eutils_settings['term'] = esearch_term_in
-        pubmed_esearch_results = IteratePubMedESearchResults(self.eutils_settings)
-        
+
+        if esearch_pubmed_id_iterable_in:
+            pubmed_esearch_results = IteratePubMedESearchResults(
+                self.eutils_settings,
+                esearch_pubmed_id_iterable_in=esearch_pubmed_id_iterable_in
+            )
+        else:
+            pubmed_esearch_results = IteratePubMedESearchResults(self.eutils_settings)
+
         self.eutils_settings['query_key'] = pubmed_esearch_results.get_query_key()
         self.eutils_settings['WebEnv'] = pubmed_esearch_results.get_web_env()
         self.eutils_settings['result_count'] = pubmed_esearch_results.get_result_count()
-        
+
         return pubmed_esearch_results
     
     def pubmed_efetch_data_iter(self, efetch_pubmed_id_iterable_in):
         return IteratePubMedEFetchData(self.eutils_settings, efetch_pubmed_id_iterable_in)
                 
-    def pubmed_esearch_data_iter(self, esearch_term_in):
+    def pubmed_esearch_data_iter(self, esearch_term_in, esearch_pubmed_id_iterable_in=[]):
         
         self.eutils_settings['WebEnv'] = None
         self.eutils_settings['query_key'] = None
         self.eutils_settings['result_count'] = None
             
         self.eutils_settings['term'] = esearch_term_in
-        pubmed_esearch_results = IteratePubMedESearchResults(self.eutils_settings)
+
+        if esearch_pubmed_id_iterable_in:
+            pubmed_esearch_results = IteratePubMedESearchResults(
+                self.eutils_settings,
+                esearch_pubmed_id_iterable_in=esearch_pubmed_id_iterable_in
+            )
+        else:
+            pubmed_esearch_results = IteratePubMedESearchResults(self.eutils_settings)
                         
         try:
             
